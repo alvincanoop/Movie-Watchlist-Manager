@@ -4,7 +4,7 @@ A full-stack MERN (MongoDB Atlas, Express.js, React.js, Node.js) web application
 
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```text
 Movie Watchlist Manager/
@@ -49,7 +49,7 @@ Movie Watchlist Manager/
 
 ---
 
-## 🚀 Key Features & Business Rules
+##  Key Features & Business Rules
 
 1. **Auto-Generated Movie Code**:
    - Automatically generated on creation in the format `MV-<release year>-<3-digit sequence>` (e.g., `MV-2024-001`).
@@ -97,7 +97,7 @@ Movie Watchlist Manager/
 
 ---
 
-## 📡 List of APIs Created
+##  List of APIs Created
 
 All endpoints return a uniform JSON envelope:
 ```json
@@ -123,7 +123,7 @@ All endpoints return a uniform JSON envelope:
 
 ---
 
-## ⚙️ Setup and Installation
+##  Setup and Installation
 
 ### 1. Prerequisites
 - **Node.js** (v18 or higher recommended)
@@ -167,7 +167,7 @@ All endpoints return a uniform JSON envelope:
 
 ---
 
-## 📸 Screenshots of the Application
+##  Screenshots of the Application
 
 ### 1. Watchlist Dashboard & Overview
 *Shows the live Statistics cards, Search and Genre/Status filter bar, and Movie Cards grid with colored status badges, priority stars, and action buttons.*
