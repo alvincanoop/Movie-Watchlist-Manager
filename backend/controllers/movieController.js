@@ -545,6 +545,126 @@ const deleteMovie = async (req, res) => {
   }
 };
 
+/**
+ * @route   GET /api/movies/watch-next
+ * @desc    Get the To Watch movie with the highest priority (tie-break by shortest runtime)
+ */
+const getWatchNextMovie = async (req, res) => {
+  try {
+    const nextMovie = await Movie.findOne({ status: 'To Watch' })
+      .sort({ priority: -1, runtime: 1, createdAt: 1 })
+      .lean();
+
+    if (!nextMovie) {
+      return res.status(404).json({
+        success: false,
+        message: 'No movies in "To Watch" status found. Add some movies to your watchlist!',
+        data: null
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Next movie recommendation found',
+      data: nextMovie
+    });
+  } catch (error) {
+    console.error('Error in getWatchNextMovie:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Error fetching watch next recommendation',
+      data: null
+    });
+  }
+};
+
+/**
+ * @route   GET /api/movies/stats
+ * @desc    Aggregate watchlist statistics (status counts, total hours, avg rating, top genre)
+ */
+const getMovieStats = async (req, res) => {
+  try {
+    // 1. Total movies in each status
+    const statusCounts = await Movie.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const statusMap = {
+      'To Watch': 0,
+      'Watching': 0,
+      'Watched': 0
+    };
+
+    statusCounts.forEach((item) => {
+      if (item._id && Object.prototype.hasOwnProperty.call(statusMap, item._id)) {
+        statusMap[item._id] = item.count;
+      }
+    });
+
+    // 2. Watched metrics: total runtime (in hours) and average rating
+    const watchedStats = await Movie.aggregate([
+      { $match: { status: 'Watched' } },
+      {
+        $group: {
+          _id: null,
+          totalRuntimeMinutes: { $sum: '$runtime' },
+          avgRating: { $avg: '$rating' }
+        }
+      }
+    ]);
+
+    let totalHoursWatched = 0;
+    let averageRating = 0;
+
+    if (watchedStats.length > 0) {
+      const { totalRuntimeMinutes, avgRating } = watchedStats[0];
+      totalHoursWatched = parseFloat(((totalRuntimeMinutes || 0) / 60).toFixed(1));
+      averageRating = avgRating ? parseFloat(avgRating.toFixed(1)) : 0;
+    }
+
+    // 3. Genre with the most Watched movies
+    const topGenreAgg = await Movie.aggregate([
+      { $match: { status: 'Watched' } },
+      {
+        $group: {
+          _id: '$genre',
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { count: -1, _id: 1 } },
+      { $limit: 1 }
+    ]);
+
+    const topWatchedGenre = topGenreAgg.length > 0 ? topGenreAgg[0]._id : 'N/A';
+    const topWatchedGenreCount = topGenreAgg.length > 0 ? topGenreAgg[0].count : 0;
+
+    return res.status(200).json({
+      success: true,
+      message: 'Dashboard statistics calculated successfully',
+      data: {
+        statusCounts: statusMap,
+        totalMovies: statusMap['To Watch'] + statusMap['Watching'] + statusMap['Watched'],
+        totalHoursWatched,
+        averageRating,
+        topWatchedGenre,
+        topWatchedGenreCount
+      }
+    });
+  } catch (error) {
+    console.error('Error in getMovieStats:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Error generating statistics',
+      data: null
+    });
+  }
+};
+
 module.exports = {
   addMovie,
   getMovies,
@@ -552,5 +672,8 @@ module.exports = {
   updateMovie,
   updateMovieStatus,
   updateMovieRating,
-  deleteMovie
+  deleteMovie,
+  getWatchNextMovie,
+  getMovieStats
 };
+

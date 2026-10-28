@@ -7,8 +7,14 @@ const {
   updateMovie,
   updateMovieStatus,
   updateMovieRating,
-  deleteMovie
+  deleteMovie,
+  getWatchNextMovie,
+  getMovieStats
 } = require('../controllers/movieController');
+
+// Specialized query endpoints (must precede /:id)
+router.get('/watch-next', getWatchNextMovie);
+router.get('/stats', getMovieStats);
 
 // Movie CRUD and workflow routes
 router.post('/', addMovie);

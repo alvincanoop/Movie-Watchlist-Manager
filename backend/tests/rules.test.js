@@ -49,4 +49,29 @@ assert.strictEqual(validateInputs(2020, 120, 0), 'Invalid priority');
 assert.strictEqual(validateInputs(2020, 120, 5), 'OK');
 console.log('✓ Field validation limits verified');
 
+// Test "Watch Next" comparator logic
+const sampleMovies = [
+  { title: 'Movie A', status: 'To Watch', priority: 4, runtime: 150 },
+  { title: 'Movie B', status: 'To Watch', priority: 5, runtime: 140 },
+  { title: 'Movie C', status: 'To Watch', priority: 5, runtime: 105 }, // Should win: priority 5 & shortest runtime
+  { title: 'Movie D', status: 'Watched', priority: 5, runtime: 90 }
+];
+
+const eligible = sampleMovies
+  .filter((m) => m.status === 'To Watch')
+  .sort((a, b) => b.priority - a.priority || a.runtime - b.runtime);
+
+assert.strictEqual(eligible[0].title, 'Movie C', 'Watch Next should pick highest priority and shortest runtime');
+console.log('✓ Watch Next recommendation logic verified');
+
+// Test stats calculation math
+const runtimes = [120, 95, 145]; // Total = 360 mins = 6.0 hours
+const ratings = [8.5, 9.0, 7.0]; // Avg = 8.1666... -> 8.2
+const totalHours = parseFloat((runtimes.reduce((a, b) => a + b, 0) / 60).toFixed(1));
+const avgRating = parseFloat((ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1));
+
+assert.strictEqual(totalHours, 6.0);
+assert.strictEqual(avgRating, 8.2);
+console.log('✓ Stats calculations (hours & avg rating) verified');
+
 console.log('All business rule unit assertions passed successfully!');
