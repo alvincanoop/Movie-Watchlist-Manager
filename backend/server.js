@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const movieRoutes = require('./routes/movieRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -16,7 +17,10 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Basic health check route
+// API Routes
+app.use('/api/movies', movieRoutes);
+
+// Health check route
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
@@ -52,4 +56,3 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
-
