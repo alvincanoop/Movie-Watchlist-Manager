@@ -93,3 +93,4 @@ export const movieApi = {
   // Aggregate statistics
   getStats: () => request('/stats')
 };
+

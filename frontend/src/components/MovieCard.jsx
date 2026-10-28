@@ -137,3 +137,4 @@ export default function MovieCard({ movie, onEdit, onChangeStatus, onDelete }) {
     </div>
   );
 }
+

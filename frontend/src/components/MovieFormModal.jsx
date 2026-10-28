@@ -264,3 +264,4 @@ export default function MovieFormModal({ isOpen, onClose, onSubmit, initialMovie
     </div>
   );
 }
+

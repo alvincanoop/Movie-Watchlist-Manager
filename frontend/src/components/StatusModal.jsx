@@ -195,3 +195,4 @@ export default function StatusModal({ isOpen, onClose, movie, onStatusUpdate, on
     </div>
   );
 }
+
