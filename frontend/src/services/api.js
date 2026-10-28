@@ -3,7 +3,7 @@
  * Communicates with Express backend
  */
 
-const API_ROOT = import.meta.env.VITE_API_URL || '';
+const API_ROOT = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
 const BASE_URL = `${API_ROOT}/api/movies`;
 
 async function request(endpoint, options = {}) {
@@ -18,7 +18,15 @@ async function request(endpoint, options = {}) {
 
   try {
     const response = await fetch(url, config);
-    const result = await response.json();
+    const contentType = response.headers.get('content-type') || '';
+
+    let result;
+    if (contentType.includes('application/json')) {
+      result = await response.json();
+    } else {
+      const text = await response.text();
+      throw new Error(`Expected JSON but received ${contentType} (${response.status}) from ${url}`);
+    }
 
     if (!response.ok) {
       const error = new Error(result.message || 'API request failed');

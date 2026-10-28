@@ -35,6 +35,8 @@ jobs:
         run: cd frontend && npm install
 
       - name: Build Frontend with Vite
+        env:
+          VITE_API_URL: https://movie-watchlist-manager-0prb.onrender.com
         run: cd frontend && npm run build
 
       - name: Setup Pages
