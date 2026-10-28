@@ -3,8 +3,7 @@
  * Communicates with Express backend
  */
 
-const API_ROOT = import.meta.env.VITE_API_URL || '';
-const BASE_URL = `${API_ROOT}/api/movies`;
+const BASE_URL = '/api/movies';
 
 async function request(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
