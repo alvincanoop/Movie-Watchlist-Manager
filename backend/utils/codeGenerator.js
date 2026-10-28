@@ -33,3 +33,4 @@ async function generateMovieCode(releaseYear) {
 }
 
 module.exports = { generateMovieCode };
+
