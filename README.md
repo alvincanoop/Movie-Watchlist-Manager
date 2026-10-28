@@ -182,3 +182,4 @@ All endpoints return a uniform JSON envelope:
 ![Watch Next & Status Flow](screenshots/watch-next-modal.png)
 
 > **Note for Evaluators:** To view the screenshots locally or after cloning, save application screenshots to the `screenshots/` directory named `dashboard.png` and `watch-next-modal.png`.
+

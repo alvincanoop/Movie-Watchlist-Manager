@@ -49,3 +49,4 @@ export default function Pagination({ currentPage, totalPages, totalMovies, limit
     </div>
   );
 }
+

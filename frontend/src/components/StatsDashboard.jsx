@@ -100,3 +100,4 @@ export default function StatsDashboard({ stats, isLoading }) {
     </section>
   );
 }
+
